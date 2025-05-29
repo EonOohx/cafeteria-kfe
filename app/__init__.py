@@ -19,6 +19,9 @@ def create_app():
     from app.routes.categoria_rt import categoria_bp
     app.register_blueprint(categoria_bp)
 
+    from app.routes.venta_rt import venta_bp
+    app.register_blueprint(venta_bp)
+
     with app.app_context():
         db.create_all()
 

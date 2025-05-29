@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Ventas{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/ventas.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    <h2>Productos seleccionados</h2>
+
+    <table id="tabla-productos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+        </tr>
+        </thead>
+        <tbody id="venta-carrito">
+        </tbody>
+    </table>
+
+    <button id="btn-finalizar-venta">Finalizar venta</button>
+
+    <hr>
+
+    <section id="seccion-agregar-productos">
+        <h2>Lista de productos</h2>
+
+        <label for="categoria-select">
+            Categoría:
+            <select id="categoria-select" name="categoria">
+                <option value="" disabled selected>Selecciona una categoría</option>
+                {% for cat in categorias %}
+                    <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="productos-lista">
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

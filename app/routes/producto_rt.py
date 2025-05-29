@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, jsonify
 
 from app.models.categoria import Categorias
 from app.models.producto import Productos
@@ -63,3 +63,10 @@ def eliminar_producto(id_producto):
     db.session.delete(producto)
     db.session.commit()
     return redirect("/productos")
+
+
+@productos_bp.route("/productos_categoria/<id_categoria>")
+def obtener_productos_categoria(id_categoria):
+    list_productos = Productos.query.filter_by(id_categoria=id_categoria).all()
+    return jsonify([p.to_dict() for p in list_productos]
+)

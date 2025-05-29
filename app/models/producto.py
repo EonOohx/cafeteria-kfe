@@ -6,12 +6,21 @@ class Productos(db.Model):
     id_categoria = db.Column(db.Integer, db.ForeignKey('categorias.id_categoria'), nullable=False)
     nombre = db.Column(db.String(250), nullable=False)
     precio = db.Column(db.Numeric(5, 2), nullable=False)
-    inventariable = db.Column(db.Boolean, default=False)
-    existencia = db.Column(db.Integer, default=0)
+    inventariable = db.Column(db.Boolean, default=False, nullable=False)
+    existencia = db.Column(db.Integer, default=0, nullable=False)
 
-    def __init__(self, id_categoria, nombre, precio, inventariable, existencia):
+    def __init__(self, id_categoria, nombre, precio, inventariable, existencia=0):
         self.id_categoria = id_categoria
         self.nombre = nombre
         self.precio = precio
         self.inventariado = inventariable
         self.existencia = existencia
+
+    def to_dict(self):
+        return {
+            "id_producto": self.id_producto,
+            "nombre": self.nombre,
+            "precio": float(self.precio),
+            "cantidad": self.existencia,
+            "inventariable": self.inventariable,
+        }
