@@ -3,30 +3,73 @@
 {% block title %}Productos{% endblock %}
 
 {% block content %}
+    <a href="{{ url_for("categorias.categorias") }}">
+        <button type="button">Ir a Categorias</button>
+    </a>
+
     <h2>Registrar producto</h2>
-    <form action="/nuevo_producto" method="POST">
-        <label for="nombre">Nombre del producto:</label>
-        <input type="text" name="nombre" placeholder="Nombre del producto">
+    <form action="/agregar_producto" method="POST">
 
-        <label for="categoria">Categoria:</label>
-        <select name="categoria">
-            {% for cat in categorias %}
-                <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
-            {% endfor %}
-        </select>
+        <label for="nombre">
+            Producto:
+            <input type="text" name="nombre">
+        </label>
 
-        <label for="precio">Precio:</label>
-        <input type="number" name="precio" placeholder="Precio">
+        <label for="categoria">
+            Categoria:
+            <select name="categoria">
+                {% for cat in categorias %}
+                    <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
+                {% endfor %}
+            </select>
+        </label>
 
-        <label for="existencia">Existencia:</label>
-        <input type="number" name="existencia" placeholder="Cantidad en existencia">
+        <label for="precio">
+            Precio:
+            <input type="number" name="precio">
+        </label>
+
+        <label for="inventariable">
+            Inventariable:
+            <input type="checkbox" name="inventariable">
+        </label>
+
+        <label for=" existencia">
+            Existencia:
+            <input type="number" name="existencia">
+        </label>
 
         <button type="submit">Guardar</button>
     </form>
 
-    <h2>Registrar categoria</h2>
-    <form action="/nueva_categoria" method="POST">
-        <input type="text" name="nombre" placeholder="Nombre de categoría">
-        <button type="submit">Guardar</button>
-    </form>
+    <table>
+        <thead>
+        <th>ID</th>
+        <th>Producto</th>
+        <th>Categoria</th>
+        <th>Precio</th>
+        <th>Existencia</th>
+        </thead>
+        <tbody>
+        {% for producto in productos %}
+            <tr>
+                <td>{{ producto.id_producto }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria.nombre }}</td>
+                <td>{{ producto.precio }}</td>
+                <td>
+                    {% if producto.inventariable %}
+                        {{ producto.existencia }}
+                    {% else %} -
+                    {% endif %}
+                <td>
+                    <a href="/editar_producto">Editar</a>
+                    <a href="/eliminar_producto">Eliminar</a>
+                </td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
 {% endblock %}

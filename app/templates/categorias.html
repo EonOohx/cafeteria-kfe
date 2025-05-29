@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Categorias{% endblock %}
+
+{% block content %}
+    <a href="{{ url_for("productos.productos") }}">
+        <button type="button">Ir a Productos</button>
+    </a>
+
+    <h2>Registrar categoria</h2>
+    <form action="/agregar_categoria" method="POST">
+        <label for="nombre">
+            <input type="text" name="nombre">
+        </label>
+        <button type="submit">Guardar</button>
+    </form>
+    <table>
+        <thead>
+        <th>Categoria</th>
+        </thead>
+        <tbody>
+        {% for cat in categorias %}
+            <tr>
+                <td>{{ cat.nombre }}</td>
+                <td>
+                    <a href="/editar_categoria">Editar</a>
+                    <a href="/eliminar_categoria">Eliminar</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
