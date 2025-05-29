@@ -16,7 +16,7 @@ def productos():
 
 
 @productos_bp.route("/agregar_producto", methods=['POST'])
-def nuevo_producto():
+def agregar_producto():
     nombre = request.form['nombre']
     categoria = request.form['categoria']
     precio = request.form['precio']
@@ -24,8 +24,42 @@ def nuevo_producto():
     existencia = None
     if inventariable:
         existencia = request.form['existencia']
-    nuevo_producto = Productos(id_categoria=categoria, nombre=nombre, precio=precio, inventariable=inventariable,
-                               existencia=existencia)
-    db.session.add(nuevo_producto)
+    producto = Productos(id_categoria=categoria, nombre=nombre, precio=precio, inventariable=inventariable,
+                         existencia=existencia)
+    db.session.add(producto)
+    db.session.commit()
+    return redirect("/productos")
+
+
+@productos_bp.route("/editar_producto/<id_producto>", methods=['GET', 'POST'])
+def editar_producto(id_producto):
+    producto = Productos.query.get(id_producto)
+    if request.method == 'POST':
+        actualizar_producto(producto)
+        return redirect("/productos")
+    categorias = Categorias.query.all()
+    return render_template('actualizar_producto.html', producto=producto, categorias=categorias, title="producto")
+
+
+def actualizar_producto(producto):
+    producto.nombre = request.form['nombre']
+    producto.id_categoria = request.form['categoria']
+    producto.precio = request.form['precio']
+
+    inventariable = request.form.get('inventariable') == 'on'
+    producto.inventariable = inventariable
+
+    existencia = None
+    if inventariable:
+        existencia = request.form['existencia']
+    producto.existencia = existencia
+
+    db.session.commit()
+
+
+@productos_bp.route("/eliminar_producto/<id_producto>")
+def eliminar_producto(id_producto):
+    producto = Productos.query.get(id_producto)
+    db.session.delete(producto)
     db.session.commit()
     return redirect("/productos")

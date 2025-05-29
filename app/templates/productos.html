@@ -2,13 +2,18 @@
 
 {% block title %}Productos{% endblock %}
 
+{% block script %}
+    <script src="{{ url_for('static', filename='js/app.js') }}">
+    </script>
+{% endblock %}
+
 {% block content %}
-    <a href="{{ url_for("categorias.categorias") }}">
+    <a href="{{ url_for('categorias.categorias') }}">
         <button type="button">Ir a Categorias</button>
     </a>
 
     <h2>Registrar producto</h2>
-    <form action="/agregar_producto" method="POST">
+    <form action="{{ url_for('productos.agregar_producto') }}" method="POST">
 
         <label for="nombre">
             Producto:
@@ -31,12 +36,12 @@
 
         <label for="inventariable">
             Inventariable:
-            <input type="checkbox" name="inventariable">
+            <input id="inventariableChk" type="checkbox" name="inventariable">
         </label>
 
         <label for=" existencia">
             Existencia:
-            <input type="number" name="existencia">
+            <input id="existenciaFld" type="number" name="existencia" disabled>
         </label>
 
         <button type="submit">Guardar</button>
@@ -63,13 +68,12 @@
                     {% else %} -
                     {% endif %}
                 <td>
-                    <a href="/editar_producto">Editar</a>
-                    <a href="/eliminar_producto">Eliminar</a>
+                    <a href="{{ url_for('productos.editar_producto', id_producto=producto.id_producto) }}">Editar</a>
+                    <a href="{{ url_for('productos.eliminar_producto', id_producto=producto.id_producto) }}">Eliminar</a>
                 </td>
             </tr>
         {% endfor %}
-
-
         </tbody>
     </table>
 {% endblock %}
+

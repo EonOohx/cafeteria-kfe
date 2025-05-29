@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Productos{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/app.js') }}">
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h2>Actualizar productos</h2>
+    <form action="{{ url_for('productos.editar_producto', id_producto=producto.id_producto) }}" method="POST">
+
+        <label for="nombre">
+            Producto:
+            <input type="text" name="nombre" value="{{ producto.nombre }}">
+        </label>
+
+        <label for="categoria">
+            Categoria:
+            <select name="categoria">
+                {% for cat in categorias %}
+                    <option value="{{ cat.id_categoria }}" {% if cat.id_categoria == producto.id_categoria %}
+                            selected {% endif %}>
+                        {{ cat.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label for="precio">
+            Precio:
+            <input type="number" name="precio" value="{{ producto.precio }}">
+        </label>
+
+        <label for="inventariable">
+            Inventariable:
+            <input id="inventariableChk" type="checkbox" name="inventariable"
+                   {% if producto.inventariable %}checked{% endif %}>
+        </label>
+
+        <label for=" existencia">
+            Existencia:
+            <input id="existenciaFld" type="number" name="existencia" value="{{ producto.existencia }}" disabled>
+        </label>
+
+        <button type="submit">Guardar</button>
+    </form>
+{% endblock %}
