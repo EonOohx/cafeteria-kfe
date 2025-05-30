@@ -1,61 +1,92 @@
-function cargarProductos() {
-    const categoriaId = document.querySelector("#categoria-select").value;
+document.addEventListener("DOMContentLoaded", () => {
+    const selectCategoria = document.getElementById("categoria-select");
+    selectCategoria.addEventListener("change", () => {
+        const categoriaId = selectCategoria.value;
+        if (categoriaId) cargarProductos(categoriaId).catch();
+    });
 
-    fetch(`/productos_categoria/${categoriaId}`)
-        .then(response => response.json())
-        .then(data => {
-            const lista = document.querySelector("#productos-lista");
-            lista.innerHTML = "";
+    document.getElementById("btn-finalizar-venta").addEventListener("click", guardarVenta);
+});
 
-            data.forEach(producto => {
+// Actualizar el valor de Total
+document.addEventListener("input", (e) => {
+    if (e.target.matches("#venta-carrito input[type='number']")) {
+        const thTotal = document.getElementById("total-venta");
+        thTotal.setAttribute("data-total", "0.00");
+        obtenerTotal();
+    }
+});
 
-                    let cantidad = producto.cantidad
-                    if (producto.cantidad < 0 || producto.cantidad === null) {
-                        cantidad = "Agotado"
-                    }
-                    if (!producto.inventariable) {
-                        cantidad = "Disponible"
-                    }
-                    const fila = document.createElement("tr");
-                    fila.innerHTML = `
-                    <td>${producto.id_producto}</td>
-                    <td>${producto.nombre}</td>
-                    <td>${cantidad}</td>
-                    <td>${producto.precio}</td>
+//Window representa la interface la ventana en el DOM - Caputar eventos
+window.addEventListener('DOMContentLoaded', () => {
+    // Si recarga el boton se deshabilita
+    document.getElementById("btn-finalizar-venta").disabled = true;
+    document.getElementById("categoria-select").value = "";
+})
 
-                `;
-                    if (producto.cantidad > 0) {
-                        fila.innerHTML += `<td>
-                                <button
-                                    class="btn-agregar"
-                                    data-id="${producto.id_producto}"
-                                    data-nombre="${producto.nombre}"
-                                    data-cantidad="${producto.cantidad}"
-                                    data-precio="${producto.precio}">
-                                    Agregar
-                                </button>
-                        </td>`;
-                    }
-                    lista.appendChild(fila);
-                }
-            )
-            ;
-            activarBotonesAgregar();
-        })
-        .catch(error => console.error("Error al obtener productos:", error));
+async function cargarProductos(categoriaId) {
+    try {
+        const response = await fetch(`/productos_categoria/${categoriaId}`);
+        const productos = await response.json();
+        renderizarProductos(productos);
+        activarBotonesAgregar();
+    } catch (error) {
+        console.error("Error al obtener productos:", error);
+    }
 }
 
+function renderizarProductos(productos) {
+    const lista = document.querySelector("#productos-lista");
+    lista.innerHTML = "";
+
+    productos.forEach(producto => {
+        const {id_producto, nombre, cantidad, precio, inventariable} = producto;
+        const stock = determinarEstadoStock(cantidad, inventariable);
+
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>${id_producto}</td>
+            <td>${nombre}</td>
+            <td>${stock}</td>
+            <td>${precio}</td>
+            ${cantidad > 0 ? botonAgregarHTML(producto) : ""}
+        `;
+        lista.appendChild(fila);
+    });
+}
+
+function determinarEstadoStock(cantidad, inventariable) {
+    if (!inventariable) return "Disponible";
+    if (cantidad === null || cantidad < 0) return "Agotado";
+    return cantidad;
+}
+
+function botonAgregarHTML({id_producto, nombre, cantidad, precio, inventariable}) {
+    return `
+        <td>
+            <button
+                class="btn-agregar"
+                data-id="${id_producto}"
+                data-nombre="${nombre}"
+                data-cantidad="${cantidad}"
+                data-precio="${precio}"
+                data-inventariable="${inventariable}"
+            >
+                Agregar
+            </button>
+        </td>`;
+}
 
 function activarBotonesAgregar() {
-    const botones = document.querySelectorAll(".btn-agregar");
-
-    botones.forEach(boton => {
+    document.querySelectorAll(".btn-agregar").forEach(boton => {
         boton.addEventListener("click", () => {
+            const {id, nombre, cantidad, precio, inventariable} = boton.dataset;
             const producto = {
-                id: boton.dataset.id,
-                nombre: boton.dataset.nombre,
-                cantidad: boton.dataset.cantidad,
-                precio: boton.dataset.precio
+                id,
+                nombre,
+                cantidad,
+                precio,
+                inventariable: inventariable === "true"
             };
             agregarAlCarrito(producto);
         });
@@ -63,37 +94,123 @@ function activarBotonesAgregar() {
 }
 
 function agregarAlCarrito(producto) {
+    const {id, nombre, cantidad, precio, inventariable} = producto;
     const carrito = document.querySelector("#venta-carrito");
 
-    if (carrito.querySelector(`tr[data-id='${producto.id}']`)) {
+    if (carrito.querySelector(`tr[data-id='${id}']`)) {
         alert("Este producto ya fue agregado.");
         return;
     }
 
     const fila = document.createElement("tr");
-    fila.setAttribute("data-id", producto.id);
-
+    // Agregando attribute data para ID
+    fila.setAttribute("data-id", id);
     fila.innerHTML = `
-        <td>${producto.id}</td>
-        <td>${producto.nombre}</td>
-        <td><input type="number" min="1" value="1"></td>
-        <td>${producto.precio}</td>
+        <td>${id}</td>
+        <td data-nombre="${nombre}">${nombre}</td>
+        <td>
+            <input data-cantidad="${cantidad}" type="number" min="1" value="1" ${inventariable ? `max="${cantidad}"` : ""}>
+        </td>
+        <td data-precio="${precio}">${precio}</td>
     `;
 
+    botonEliminarHTML(fila);
     carrito.appendChild(fila);
+    obtenerTotal();
+    document.getElementById("btn-finalizar-venta").disabled = false;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const selectCargar = document.getElementById("categoria-select")
-    const btnFinalizar = document.getElementById("btn-finalizar-venta")
+function botonEliminarHTML(fila) {
+    const celdaAccion = document.createElement('td');
+    const botonEliminar = document.createElement('button');
+    botonEliminar.textContent = "Eliminar";
+    botonEliminar.classList.add('eliminar');
+    botonEliminar.addEventListener('click', () => {
+        fila.remove();
+        obtenerTotal();
+    });
+    celdaAccion.appendChild(botonEliminar);
+    fila.appendChild(celdaAccion);
+}
 
-    selectCargar.addEventListener("change", function () {
-        const categoriaId = selectCargar.value;
-        if (!categoriaId) return;
-        cargarProductos(categoriaId);
+function obtenerTotal() {
+    let total = 0;
+    const filas = document.querySelectorAll("#venta-carrito > tr");
+    const thTotal = document.getElementById("total-venta");
+
+    filas.forEach(fila => {
+        const inputCantidad = fila.querySelector("input[type='number']");
+        inputCantidad.dataset.cantidad = inputCantidad.value
+        const cantidad = inputCantidad ? parseInt(inputCantidad.value) : 1;
+        const precio = parseFloat(fila.querySelector("td[data-precio]").dataset.precio);
+
+        total += cantidad * precio;
+    });
+
+    thTotal.textContent = `Total: $${total.toFixed(2)}`;
+    thTotal.dataset.value = total.toFixed(2);
+    document.getElementById("btn-finalizar-venta").disabled = total === 0;
+}
+
+async function guardarVenta() {
+    const total_venta = document.getElementById("total-venta").dataset.value;
+    const nombreCliente = document.getElementById("inp-cliente").value;
+    const nombreEmpleado = document.getElementById("inp-empleado").value;
+
+    const venta = {
+        monto_total: total_venta,
+        fecha: new Date().toISOString(),
+        cliente: nombreCliente,
+        empleado: nombreEmpleado
+    }
+
+    await fetch("/ventas", {
+        method: 'POST',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify(venta)
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error("Error en la solicitud - Registro de Venta");
+        }
+        return response.json();
+    }).then(data => {
+            console.log("Registro de venta guardado correctamente");
+            guardarDetallesVenta(data.id_venta)
+        }
+    ).catch(error => {
+        console.error("Error", error)
+    });
+}
+
+async function guardarDetallesVenta(id_venta) {
+    const filas = document.querySelectorAll("#venta-carrito > tr");
+    for (const fila of filas) {
+
+        const informacion_venta = {
+            id_venta: id_venta,
+            id_producto: fila.dataset.id,
+            cantidad: fila.querySelector("input[data-cantidad]").dataset.cantidad,
+            precio_unitario: fila.querySelector("td[data-precio]").dataset.precio,
+        }
+
+        await fetch('/ventas/detalles', {
+            method: 'POST',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify(informacion_venta)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la solicitud - Detalles de venta");
+            }
+            return response.json();
+        }).then(_ => {
+            console.log("Detalles de venta guardado correctamente");
+        }).catch(error => {
+            console.error("Error", error);
+        });
+    }
+
+    filas.forEach(fila => {
+        fila.remove();
+        obtenerTotal();
     })
-    // btnFinalizar.addEventListener("click", guardarVenta)
-})
-
-
-
+}

@@ -7,39 +7,55 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Productos seleccionados</h2>
+    <section id="seccion-registro-venta">
+        <h2>Registro de Venta</h2>
+        <button id="btn-ver-ventas">Ver ventas</button>
 
-    <table id="tabla-productos">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Cantidad</th>
-            <th>Precio unitario</th>
-        </tr>
-        </thead>
-        <tbody id="venta-carrito">
-        </tbody>
-    </table>
+        <hr>
 
-    <button id="btn-finalizar-venta">Finalizar venta</button>
+        <label for="inp-cliente">Nombre del cliente: <input id="inp-cliente" type="text"></label>
+        <label for="inp-empleado">Nombre del empleado: <input id="inp-empleado" type="text"></label>
+
+        <h3 id="productos-seleccionados">Productos seleccionados</h3>
+        <table id="tabla-productos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="venta-carrito">
+            <!-- Filas de productos -->
+            </tbody>
+            <tfoot>
+            <tr>
+                <td id="total-venta" colspan="4">Total venta: <span>$0.00</span></td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <button id="btn-finalizar-venta" type="button" disabled>Finalizar venta</button>
+    </section>
 
     <hr>
 
     <section id="seccion-agregar-productos">
-        <h2>Lista de productos</h2>
+        <h2 id="lista-productos">Lista de productos</h2>
 
-        <label for="categoria-select">
-            Categoría:
-            <select id="categoria-select" name="categoria">
+        <div class="filtro-categoria">
+            <label for="categoria-select">Categoría:</label>
+            <select id="categoria-select" name="categoria" required>
                 <option value="" disabled selected>Selecciona una categoría</option>
                 {% for cat in categorias %}
                     <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
                 {% endfor %}
             </select>
-        </label>
+        </div>
 
-        <table>
+        <table id="tabla-lista-productos">
             <thead>
             <tr>
                 <th>ID</th>
@@ -50,6 +66,7 @@
             </tr>
             </thead>
             <tbody id="productos-lista">
+            <!-- Productos disponibles -->
             </tbody>
         </table>
     </section>
