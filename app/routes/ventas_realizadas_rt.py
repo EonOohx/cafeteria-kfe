@@ -8,10 +8,10 @@ from sqlalchemy.orm import joinedload
 from app.models.registro_ventas import DetallesVentas
 from app.models.ventas import Ventas
 
-ventas_realizadas_br = Blueprint('ventas_realizadas', __name__)
+ventas_realizadas_bp = Blueprint('ventas_realizadas', __name__)
 
 
-@ventas_realizadas_br.route('/ventas_realizadas', methods=['GET'])
+@ventas_realizadas_bp.route('/ventas_realizadas', methods=['GET'])
 def ventas_realizadas():
     fecha = request.args.get('fecha')
     if fecha:
@@ -25,7 +25,7 @@ def ventas_realizadas():
     return render_template("/ventas_realizadas.html")
 
 
-@ventas_realizadas_br.route('/ventas_realizadas/detalles', methods=['GET'])
+@ventas_realizadas_bp.route('/ventas_realizadas/detalles', methods=['GET'])
 def ventas_detalles():
     id_venta = request.args.get('id')
     if id_venta:

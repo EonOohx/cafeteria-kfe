@@ -13,6 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inp-fecha-ventas").value = obtenerFechaHoy();
 });
 
+window.addEventListener("DOMContentLoaded", () => {
+    const url = document.getElementById("btn-obtener-ventas").value;
+    obtenerVentasPorFecha(url).catch();
+})
+
 async function obtenerVentasPorFecha(url) {
     try {
         const inpFechaVentas = document.getElementById("inp-fecha-ventas");

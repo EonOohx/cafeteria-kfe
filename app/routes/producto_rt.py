@@ -21,7 +21,7 @@ def agregar_producto():
     categoria = request.form['categoria']
     precio = request.form['precio']
     inventariable = request.form.get('inventariable') == 'on'
-    existencia = None
+    existencia = 0
     if inventariable:
         existencia = request.form['existencia']
     producto = Productos(id_categoria=categoria, nombre=nombre, precio=precio, inventariable=inventariable,
@@ -49,7 +49,7 @@ def actualizar_producto(producto):
     inventariable = request.form.get('inventariable') == 'on'
     producto.inventariable = inventariable
 
-    existencia = None
+    existencia = 0
     if inventariable:
         existencia = request.form['existencia']
     producto.existencia = existencia
