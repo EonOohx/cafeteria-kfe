@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from flask import Blueprint, render_template, request, jsonify
 
@@ -15,7 +16,7 @@ venta_bp = Blueprint('ventas', __name__)
 def ventas():
     if request.method == 'POST':
         response = request.get_json()
-        fecha = datetime.fromisoformat(response['fecha'].replace('Z', '+00:00'))
+        fecha = datetime.fromisoformat(response['fecha'].replace('Z', '+00:00')).astimezone(ZoneInfo("America/Mexico_City"))
         venta = Ventas(monto_total=response['monto_total'], fecha=fecha, cliente=response['cliente'],
                        empleado=response['empleado'])
         db.session.add(venta)

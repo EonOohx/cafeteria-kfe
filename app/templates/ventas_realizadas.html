@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Ventas{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/ventas_realizadas.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    <h2>Historial de ventas</h2>
+    <button id="backbtn-realizar-venta" data-url="{{ url_for('ventas.ventas') }}">Realizar venta</button>
+
+    <hr>
+
+    <section id="seccion-ver-ventas">
+        <label>
+            Fecha de ventas:
+            <input id="inp-fecha-ventas" type="date">
+        </label>
+        <button id="btn-obtener-ventas" data-url="{{ url_for('ventas_realizadas.ventas_realizadas') }}">
+            Consultar
+        </button>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Empleado</th>
+                <th>Monto</th>
+            </tr>
+            </thead>
+            <tbody id="tb-registros-venta">
+            <!-- Registros de venta-->
+            </tbody>
+        </table>
+    </section>
+
+    <hr>
+
+    <section id="seccion-detalles-ventas">
+        <h3>Detalles de venta</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+            </tr>
+            </thead>
+            <tbody id="tb-detalles-ventas" data-url="{{ url_for('ventas_realizadas.ventas_detalles') }}">
+            <!-- Detalles de venta-->
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

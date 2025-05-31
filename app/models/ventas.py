@@ -13,3 +13,11 @@ class Ventas(db.Model):
         self.fecha = fecha
         self.cliente = cliente
         self.empleado = empleado
+
+    def to_dict(self):
+        return {
+            "id_venta": self.id_venta,
+            "cliente": self.cliente,
+            "empleado": self.empleado,
+            "monto_total": self.monto_total,
+        }

@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block content %}
+    <h2>Registro de Venta</h2>
+    <button id="btn-ver-ventas" data-url="{{ url_for('ventas_realizadas.ventas_realizadas') }}">Ver ventas</button>
+
+    <hr>
+
     <section id="seccion-registro-venta">
-        <h2>Registro de Venta</h2>
-        <button id="btn-ver-ventas">Ver ventas</button>
-
-        <hr>
-
         <label for="inp-cliente">Nombre del cliente: <input id="inp-cliente" type="text"></label>
         <label for="inp-empleado">Nombre del empleado: <input id="inp-empleado" type="text"></label>
 

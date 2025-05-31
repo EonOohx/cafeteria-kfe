@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("btn-finalizar-venta").addEventListener("click", guardarVenta);
+
+    const btnVerVentas = document.getElementById("btn-ver-ventas");
+    btnVerVentas.addEventListener("click", () => {
+        window.location.href = btnVerVentas.dataset.url;
+    })
+
+    const inpEmpleado = document.getElementById("inp-empleado");
+    inpEmpleado.addEventListener("input", () => {
+        localStorage.setItem("empleado", inpEmpleado.value);
+    })
 });
 
 // Actualizar el valor de Total
@@ -22,6 +32,12 @@ window.addEventListener('DOMContentLoaded', () => {
     // Si recarga el boton se deshabilita
     document.getElementById("btn-finalizar-venta").disabled = true;
     document.getElementById("categoria-select").value = "";
+
+    const inpEmpleado = document.getElementById("inp-empleado");
+    if (localStorage.getItem("empleado")){
+        inpEmpleado.value = localStorage.getItem("empleado");
+    }
+
 })
 
 async function cargarProductos(categoriaId) {
@@ -36,8 +52,8 @@ async function cargarProductos(categoriaId) {
 }
 
 function renderizarProductos(productos) {
-    const lista = document.querySelector("#productos-lista");
-    lista.innerHTML = "";
+    const tabla = document.querySelector("#productos-lista");
+    tabla.innerHTML = "";
 
     productos.forEach(producto => {
         const {id_producto, nombre, cantidad, precio, inventariable} = producto;
@@ -51,7 +67,7 @@ function renderizarProductos(productos) {
             <td>${precio}</td>
             ${cantidad > 0 ? botonAgregarHTML(producto) : ""}
         `;
-        lista.appendChild(fila);
+        tabla.appendChild(fila);
     });
 }
 
