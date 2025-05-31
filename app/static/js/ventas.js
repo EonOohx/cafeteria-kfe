@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const selectCategoria = document.getElementById("categoria-select");
-    selectCategoria.addEventListener("change", () => {
-        const categoriaId = selectCategoria.value;
+    document.getElementById("categoria-select").addEventListener("change", (event) => {
+        const categoriaId = event.target.value;
         if (categoriaId) cargarProductos(categoriaId).catch();
     });
 
@@ -34,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("categoria-select").value = "";
 
     const inpEmpleado = document.getElementById("inp-empleado");
-    if (localStorage.getItem("empleado")){
+    if (localStorage.getItem("empleado")) {
         inpEmpleado.value = localStorage.getItem("empleado");
     }
 
@@ -220,6 +219,8 @@ async function guardarDetallesVenta(id_venta) {
             return response.json();
         }).then(_ => {
             console.log("Detalles de venta guardado correctamente");
+            const categoriaId = document.getElementById("categoria-select").value;
+            if (categoriaId) cargarProductos(categoriaId).catch();
         }).catch(error => {
             console.error("Error", error);
         });
