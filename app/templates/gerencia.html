@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="{{ url_for('static', filename="js/gerencia.js") }}" defer></script>
+{% endblock %}
+
+{% block content %}
+    <h3>Productos más vendidos</h3>
+    <form>
+        <label>De: <input name="fecha_inicio" type="date"></label>
+        <label>Hasta: <input name="fecha_final" type="date"></label>
+        <button id="btn-productos-fechas" type="submit" data-url="{{ url_for('gerencia.productos_fechas') }}">Buscar
+        </button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+        </tr>
+        </thead>
+        <tbody id="tb-productos-fecha">
+        <!-- Productos en rango de fechas -->
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h3>Ventas por Producto</h3>
+    <div id="div-productos-venta" style="width: 800px;" data-url="{{ url_for('gerencia.productos_ventas') }}">
+        <canvas id="canva-productos-venta"></canvas>
+    </div>
+
+    <hr>
+
+    <h3>Productos populares</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+        </tr>
+        </thead>
+        <tbody id="tb-productos-populares" data-url="{{ url_for('gerencia.productos_populares') }}">
+        <!-- Productos Populares -->
+        </tbody>
+    </table>
+{% endblock %}
