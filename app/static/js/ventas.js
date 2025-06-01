@@ -42,6 +42,10 @@ window.addEventListener('DOMContentLoaded', () => {
 async function cargarProductos(categoriaId) {
     try {
         const response = await fetch(`/productos_categoria/${categoriaId}`);
+        if (!response.ok) {
+            console.log(response.statusText);
+            return;
+        }
         const productos = await response.json();
         renderizarProductos(productos);
         activarBotonesAgregar();
@@ -113,7 +117,7 @@ function agregarAlCarrito(producto) {
     const carrito = document.querySelector("#venta-carrito");
 
     if (carrito.querySelector(`tr[data-id='${id}']`)) {
-        alert("Este producto ya fue agregado.");
+        alert("Este resultado ya fue agregado.");
         return;
     }
 

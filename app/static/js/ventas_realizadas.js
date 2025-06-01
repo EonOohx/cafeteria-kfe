@@ -26,11 +26,11 @@ async function obtenerVentasPorFecha(url) {
             return;
         }
         const response = await fetch(`${url}?fecha=${inpFechaVentas.value}`);
-        const ventas = await response.json();
         if (!response.ok) {
-            console.log(ventas.error);
+            console.log(response.statusText);
             return;
         }
+        const ventas = await response.json();
         rendenrizarVentas(ventas);
         obtenerDetallesVenta();
     } catch (error) {

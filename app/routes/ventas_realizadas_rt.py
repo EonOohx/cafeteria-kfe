@@ -2,7 +2,6 @@ from datetime import timedelta, datetime
 
 import sqlalchemy.exc
 from flask import Blueprint, render_template, request, jsonify
-from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 
 from app.models.registro_ventas import DetallesVentas
@@ -18,7 +17,7 @@ def ventas_realizadas():
         fecha = datetime.strptime(fecha, "%Y-%m-%d")
         fecha_siguiente = fecha + timedelta(days=1)
         try:
-            ventas = Ventas.query.filter(and_(Ventas.fecha >= fecha, Ventas.fecha < fecha_siguiente)).all()
+            ventas = Ventas.query.where(Ventas.fecha.between(fecha, fecha_siguiente)).all()
             return jsonify([v.to_dict() for v in ventas]), 200
         except sqlalchemy.exc.ProgrammingError as _:
             return jsonify({'error': "La tabla ventas no existe"}), 500

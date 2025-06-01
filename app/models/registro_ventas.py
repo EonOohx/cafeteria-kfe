@@ -9,7 +9,6 @@ class DetallesVentas(db.Model):
     id_producto = db.Column(db.Integer, db.ForeignKey('productos.id_producto'))
     cantidad = db.Column(db.Integer)
     precio_unitario = db.Column(db.Numeric(5, 2))
-    producto = relationship('Productos', backref='ventas', lazy=True)
 
     def __init__(self, id_venta, id_producto, cantidad, precio_unitario):
         self.id_venta = id_venta

@@ -9,9 +9,9 @@
 <header>
     <h1>Cafetería KFE</h1>
     <nav>
-        <a href="/productos">Productos</a>
-        <a href="/ventas">Ventas</a>
-        <a href="/reportes">Reportes</a>
+        <a href="{{ url_for('ventas.ventas') }}">Ventas</a>
+        <a href="{{ url_for('productos.productos') }}">Productos</a>
+        <a href="{{ url_for('gerencia.gerencia') }}">Reportes</a>
     </nav>
 </header>
 <main>

@@ -7,6 +7,7 @@ class Ventas(db.Model):
     fecha = db.Column(db.DateTime)
     cliente = db.Column(db.String(100))
     empleado = db.Column(db.String(100))
+    detalles = db.relationship("DetallesVentas", backref="venta", lazy=True)
 
     def __init__(self, monto_total, fecha, cliente, empleado):
         self.monto_total = monto_total

@@ -38,7 +38,7 @@ def editar_producto(id_producto):
         actualizar_producto(producto)
         return redirect("/productos")
     categorias = Categorias.query.all()
-    return render_template('actualizar_producto.html', producto=producto, categorias=categorias, title="producto")
+    return render_template('actualizar_producto.html', producto=producto, categorias=categorias, title="resultado")
 
 
 def actualizar_producto(producto):
