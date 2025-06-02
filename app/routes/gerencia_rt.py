@@ -65,20 +65,22 @@ def registros_ventas_to_dict(resultado):
 def obtener_productos_fecha(inicio, final):
     fecha_inicio = datetime.strptime(inicio, "%Y-%m-%d")
     fecha_fin = datetime.strptime(final, "%Y-%m-%d") + timedelta(days=1)
-    resultados = (
-        db.session.query(
-            DetallesVentas.id_producto,
-            func.SUM(DetallesVentas.cantidad).label("cantidad"),
-            Productos.nombre
+    if fecha_inicio > fecha_fin:
+        resultados = (
+            db.session.query(
+                DetallesVentas.id_producto,
+                func.SUM(DetallesVentas.cantidad).label("cantidad"),
+                Productos.nombre
+            )
+            .join(Productos, DetallesVentas.id_producto == Productos.id_producto)
+            .join(Ventas, DetallesVentas.id_venta == Ventas.id_venta)
+            .where(Ventas.fecha.between(fecha_inicio, fecha_fin))
+            .group_by(DetallesVentas.id_producto, Productos.nombre)
+            .order_by(func.SUM(DetallesVentas.cantidad).desc())
+            .all()
         )
-        .join(Productos, DetallesVentas.id_producto == Productos.id_producto)
-        .join(Ventas, DetallesVentas.id_venta == Ventas.id_venta)
-        .where(Ventas.fecha.between(fecha_inicio, fecha_fin))
-        .group_by(DetallesVentas.id_producto, Productos.nombre)
-        .order_by(func.SUM(DetallesVentas.cantidad).desc())
-        .all()
-    )
-    return jsonify([registros_productos_to_dict(d) for d in resultados]), 200
+        return jsonify([registros_productos_to_dict(d) for d in resultados]), 200
+    return jsonify({"error":"La fecha final debe ser superior a la inicial"}), 400
 
 
 def obtener_productos_fecha_todos():
