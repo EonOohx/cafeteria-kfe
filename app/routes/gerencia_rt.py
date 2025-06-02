@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import sqlalchemy.exc
 from flask import Blueprint, render_template, request, jsonify
 from sqlalchemy import func
 
@@ -12,7 +13,8 @@ gerencia_bp = Blueprint("gerencia", __name__)
 
 
 @gerencia_bp.route("/reportes", methods=["GET"])
-def gerencia(): return render_template("gerencia.html")
+def gerencia():
+    return render_template("gerencia.html")
 
 
 @gerencia_bp.route("/reportes/populares", methods=["GET"])
@@ -36,9 +38,12 @@ def productos_populares():
 def productos_fechas():
     fecha_inicio = request.args.get("inicio")
     fecha_final = request.args.get("final")
-    if fecha_inicio and fecha_final:
-        return obtener_productos_fecha(fecha_inicio, fecha_final)
-    else:
+    try:
+        if fecha_inicio and fecha_final:
+            return obtener_productos_fecha(fecha_inicio, fecha_final)
+        else:
+            return obtener_productos_fecha_todos()
+    except sqlalchemy.exc.ProgrammingError as _:
         return jsonify({"error": "No se proporcionaron las fechas para la busqueda"}), 400
 
 
@@ -69,6 +74,22 @@ def obtener_productos_fecha(inicio, final):
         .join(Productos, DetallesVentas.id_producto == Productos.id_producto)
         .join(Ventas, DetallesVentas.id_venta == Ventas.id_venta)
         .where(Ventas.fecha.between(fecha_inicio, fecha_fin))
+        .group_by(DetallesVentas.id_producto, Productos.nombre)
+        .order_by(func.SUM(DetallesVentas.cantidad).desc())
+        .all()
+    )
+    return jsonify([registros_productos_to_dict(d) for d in resultados]), 200
+
+
+def obtener_productos_fecha_todos():
+    resultados = (
+        db.session.query(
+            DetallesVentas.id_producto,
+            func.SUM(DetallesVentas.cantidad).label("cantidad"),
+            Productos.nombre
+        )
+        .join(Productos, DetallesVentas.id_producto == Productos.id_producto)
+        .join(Ventas, DetallesVentas.id_venta == Ventas.id_venta)
         .group_by(DetallesVentas.id_producto, Productos.nombre)
         .order_by(func.SUM(DetallesVentas.cantidad).desc())
         .all()

@@ -1,12 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const url = document.getElementById("btn-productos-fechas").dataset.url;
+
     document.querySelector("form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        consultarProductosFechas().catch();
+        const fecha_inicio = document.querySelector("input[name='fecha_inicio']").value;
+        const fecha_final = document.querySelector("input[name='fecha_final']").value;
+        const uri = `${url}?inicio=${fecha_inicio}&final=${fecha_final}`
+        consultarProductosFechas(uri).catch();
     });
 
     document.querySelector("input[name='fecha_inicio']").value = fechaActual();
     document.querySelector("input[name='fecha_final']").value = fechaActual();
-    consultarProductosFechas().catch();
+    consultarProductosFechas(url).catch();
     renderizarProductosVendidos().catch();
     renderizarProductosPopulares().catch();
 });
@@ -20,12 +25,9 @@ function fechaActual() {
     return `${anio}-${mes}-${dia}`;
 }
 
-async function consultarProductosFechas() {
-    const url = document.getElementById("btn-productos-fechas").dataset.url;
+async function consultarProductosFechas(uri) {
     try {
-        const fecha_inicio = document.querySelector("input[name='fecha_inicio']").value;
-        const fecha_final = document.querySelector("input[name='fecha_final']").value;
-        const response = await fetch(`${url}?inicio=${fecha_inicio}&final=${fecha_final}`);
+        const response = await fetch(`${uri}`);
         if (!response.ok) {
             console.log(response.statusText);
             return;

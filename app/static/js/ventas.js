@@ -68,7 +68,7 @@ function renderizarProductos(productos) {
             <td>${nombre}</td>
             <td>${stock}</td>
             <td>${precio}</td>
-            ${cantidad > 0 ? botonAgregarHTML(producto) : ""}
+            ${(cantidad > 0 || !inventariable) ? botonAgregarHTML(producto) : ""}
         `;
         tabla.appendChild(fila);
     });
@@ -176,29 +176,35 @@ async function guardarVenta() {
     const nombreCliente = document.getElementById("inp-cliente").value;
     const nombreEmpleado = document.getElementById("inp-empleado").value;
 
-    const venta = {
-        monto_total: total_venta,
-        fecha: new Date().toISOString(),
-        cliente: nombreCliente,
-        empleado: nombreEmpleado
-    }
+    const nombreEmpleadoValido = /^[\p{L}\s'-]+$/u.test(nombreEmpleado);
+    const nombreClienteValido = /^[\p{L}\s'-]+$/u.test(nombreCliente);
 
-    await fetch("/ventas", {
-        method: 'POST',
-        headers: {'Content-type': 'application/json'},
-        body: JSON.stringify(venta)
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error("Error en la solicitud - Registro de Venta");
+    if (nombreEmpleadoValido && nombreClienteValido) {
+        const venta = {
+            monto_total: total_venta,
+            fecha: new Date().toISOString(),
+            cliente: nombreCliente,
+            empleado: nombreEmpleado
         }
-        return response.json();
-    }).then(data => {
-            console.log("Registro de venta guardado correctamente");
-            guardarDetallesVenta(data.id_venta)
-        }
-    ).catch(error => {
-        console.error("Error", error)
-    });
+
+        await fetch("/ventas", {
+            method: 'POST',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify(venta)
+        }).then(response => {
+            if (!response.ok) {
+                alert("No se pudo registrar la venta");
+                throw new Error("Error en la solicitud - Registro de Venta");
+            }
+            return response.json();
+        }).then(data => {
+                alert("Registro de venta guardado correctamente");
+                guardarDetallesVenta(data.id_venta)
+            }
+        ).catch(error => {
+            console.error("Error", error)
+        });
+    } else alert("El nombre solo puede contener letras")
 }
 
 async function guardarDetallesVenta(id_venta) {

@@ -7,27 +7,5 @@
         <button type="button">Ir a Productos</button>
     </a>
 
-    <h2>Registrar categoria</h2>
-    <form action="{{ url_for('categorias.agregar_categoria') }}" method="POST">
-        <label for="nombre">
-            <input type="text" name="nombre">
-        </label>
-        <button type="submit">Guardar</button>
-    </form>
-    <table>
-        <thead>
-        <th>Categoria</th>
-        </thead>
-        <tbody>
-        {% for cat in categorias %}
-            <tr>
-                <td>{{ cat.nombre }}</td>
-                <td>
-                    <a href="{{ url_for('categorias.editar_categoria', id_categoria=cat.id_categoria) }}">Editar</a>
-                    <a href="{{ url_for('categorias.eliminar_categoria', id_categoria=cat.id_categoria) }}">Eliminar</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+
 {% endblock %}

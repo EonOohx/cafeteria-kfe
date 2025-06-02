@@ -1,29 +1,30 @@
 {% extends 'base.html' %}
 
-{% block title %}Productos{% endblock %}
+{% block title %} - Productos{% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='js/app.js') }}">
+    <script src="{{ url_for('static', filename='js/productos.js') }}" defer>
     </script>
 {% endblock %}
 
 {% block content %}
     <h2>Actualizar productos</h2>
     <form action="{{ url_for('productos.editar_producto', id_producto=producto.id_producto) }}" method="POST">
-
-        <label for="nombre">
+        <label for="nombre_producto">
             Producto:
-            <input type="text" name="nombre" value="{{ producto.nombre }}">
+            <input type="text" name="nombre_producto" value="{{ producto.nombre }}">
         </label>
 
         <label for="categoria">
             Categoria:
-            <select name="categoria">
+            <select id="tipo-categoria" name="categoria">
+                <option value="">Seleccione una categoría</option>
                 {% for cat in categorias %}
-                    <option value="{{ cat.id_categoria }}" {% if cat.id_categoria == producto.id_categoria %}
-                            selected {% endif %}>
-                        {{ cat.nombre }}
-                    </option>
+                    {% if producto.id_categoria == cat.id_categoria %}
+                        <option value="{{ cat.id_categoria }}" selected>{{ cat.nombre }}</option>
+                    {% else %}
+                        <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </label>
@@ -39,11 +40,21 @@
                    {% if producto.inventariable %}checked{% endif %}>
         </label>
 
-        <label for=" existencia">
+        <label id="existenciaLabel">
             Existencia:
-            <input id="existenciaFld" type="number" name="existencia" value="{{ producto.existencia }}" disabled>
+            <input id="existenciaFld" type="number" name="existencia" value="{{ producto.existencia }}" min="0"
+                   required>
         </label>
 
-        <button type="submit">Guardar</button>
+        {{ producto.existencia }}
+        <label id="disponibleLabel" style="display:none;">
+            Disponible:
+            <select name="disponible" id="disponibleFld">
+                <option value="1" {% if producto.existencia == 1 %}selected{% endif %}>Disponible</option>
+                <option value="0" {% if producto.existencia == 0 %}selected{% endif %}>No disponible</option>
+            </select>
+        </label>
+
+        <button id="btn-guardar-producto" type="submit" disabled>Guardar</button>
     </form>
 {% endblock %}
