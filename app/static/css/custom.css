@@ -1,0 +1,48 @@
+body {
+background:  #FFE8B5;
+background: linear-gradient(90deg,rgba(255, 232, 181, 1) 0%, rgba(111, 78, 55, 1) 50%, rgba(181, 142, 111, 1) 100%);
+}
+
+.navbar {
+    background-color: #7A574D;
+}
+
+.navbar a {
+    font-family: "Noto Sans Osmanya", sans-serif;
+    color: white;
+}
+
+.container {
+    font-family: "Open Sans", monospace;
+    color: #2E2E2E;
+    background-color: #FFF8F0;
+}
+
+input.form-control {
+    width: 300px;
+}
+
+.tabla-datos {
+    max-height: 300px !important;
+    overflow-y: auto !important;
+}
+
+.tabla-producto {
+    max-height: 600px !important;
+    overflow-y: auto !important;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+}
+
+#total-venta {
+    height: 50px;
+    width: 100%;
+    align-content: center;
+    font-size: large;
+    font-weight: bold;
+    border-style: double;
+    border-color: black;
+    background-color: white;
+}

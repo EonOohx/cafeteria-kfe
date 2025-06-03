@@ -8,129 +8,151 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Registrar producto</h2>
+    <h2>Productos</h2>
+    <section id="seccion-productos" style="height: 600px">
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Agregar Producto</h3>
+                <form action="{{ url_for('productos.agregar_producto') }}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label" for="nombre_producto">
+                            Producto:
+                            <input class="form-control" type="text" name="nombre_producto" required>
+                        </label></div>
+                    <div class="mb-3">
+                        <label class="form-label" for="categoria">
+                            Categoria:
+                            <select id="tipo-categoria" name="categoria" required>
+                                <option value="">Seleccione una categoría</option>
+                                {% for cat in categorias %}
+                                    <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </label></div>
+                    <div class="mb-3">
+                        <label class="form-label" for="precio">
+                            Precio:
+                            <input class="form-control" type="number" name="precio" value="1" min="1" required>
+                        </label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-check-label" for="inventariable">
+                            Inventariable:
+                            <input class="form-check-input" id="inventariableChk" type="checkbox" name="inventariable"
+                                   checked>
+                        </label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" id="existenciaLabel">
+                            Existencia:
+                            <input class="form-control" id="existenciaFld" type="number" name="existencia" value="0"
+                                   min="0"
+                                   required>
+                        </label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" id="disponibleLabel" style="display:none;">
+                            Disponible:
+                            <select name="disponible" id="disponibleFld">
+                                <option value="1">Disponible</option>
+                                <option value="0">No disponible</option>
+                            </select>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" id="btn-guardar-producto" type="submit" disabled>Guardar</button>
+                </form>
+            </div>
 
-    <hr>
+            <div class="col-md-8">
+                <label class="form-label">
+                    Buscar por categoria:
+                    <select id="slt-filtrar-categoria" data-url="{{ url_for('productos.filtrar_productos') }}" required>
+                        <option value="">Todos</option>
+                        {% for cat in categorias %}
+                            <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
 
-    <section id="seccion-productos">
-        <form action="{{ url_for('productos.agregar_producto') }}" method="POST">
-            <label for="nombre_producto">
-                Producto:
-                <input type="text" name="nombre_producto" required>
-            </label>
-
-            <label for="categoria">
-                Categoria:
-                <select id="tipo-categoria" name="categoria" required>
-                    <option value="">Seleccione una categoría</option>
-                    {% for cat in categorias %}
-                        <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-
-            <label for="precio">
-                Precio:
-                <input type="number" name="precio" value="1" min="1" required>
-            </label>
-
-            <label for="inventariable">
-                Inventariable:
-                <input id="inventariableChk" type="checkbox" name="inventariable" checked>
-            </label>
-
-            <label id="existenciaLabel">
-                Existencia:
-                <input id="existenciaFld" type="number" name="existencia" value="0" min="0"
-                       required>
-            </label>
-
-            <label id="disponibleLabel" style="display:none;">
-                Disponible:
-                <select name="disponible" id="disponibleFld">
-                    <option value="1">Disponible</option>
-                    <option value="0">No disponible</option>
-                </select>
-            </label>
-
-            <button id="btn-guardar-producto" type="submit" disabled>Guardar</button>
-        </form>
-
-        <hr>
-
-        <label>
-            Buscar por categoria:
-            <select id="slt-filtrar-categoria" data-url="{{ url_for('productos.filtrar_productos') }}" required>
-                <option value="">Todos</option>
-                {% for cat in categorias %}
-                    <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
-                {% endfor %}
-            </select>
-        </label>
-
-        <table style="height: 300px; overflow-y: auto;">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Producto</th>
-                <th>Categoria</th>
-                <th>Precio</th>
-                <th>Existencia</th>
-            </tr>
-            </thead>
-            <tbody id="tb-productos">
-            {% for producto in productos %}
-                <tr>
-                    <td>{{ producto.id_producto }}</td>
-                    <td>{{ producto.nombre }}</td>
-                    <td>{{ producto.categoria.nombre }}</td>
-                    <td>${{ producto.precio }}</td>
-                    <td>
-                        {% if producto.inventariable %}
-                            {{ producto.existencia }}
-                        {% elif producto.existencia == 1 %}
-                            {{ "Disponible" }}
-                        {% else %}
-                            {{ "No Disponible" }}
-                        {% endif %}
-                    <td>
-                        <a href="{{ url_for('productos.editar_producto', id_producto=producto.id_producto) }}">Editar</a>
-                        <a href="{{ url_for('productos.eliminar_producto', id_producto=producto.id_producto) }}">Eliminar</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <div class="tabla-productos">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Categoria</th>
+                            <th>Precio</th>
+                            <th>Existencia</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tb-productos">
+                        {% for producto in productos %}
+                            <tr>
+                                <td>{{ producto.id_producto }}</td>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.categoria.nombre }}</td>
+                                <td>${{ producto.precio }}</td>
+                                <td>
+                                    {% if producto.inventariable %}
+                                        {{ producto.existencia }}
+                                    {% elif producto.existencia == 1 %}
+                                        {{ "Disponible" }}
+                                    {% else %}
+                                        {{ "No Disponible" }}
+                                    {% endif %}
+                                <td>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for('productos.editar_producto', id_producto=producto.id_producto) }}">Editar</a>
+                                    <a class="btn btn-danger"
+                                       href="{{ url_for('productos.eliminar_producto', id_producto=producto.id_producto) }}">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section id="seccion-categoria">
-        <h2>Registrar categoria</h2>
+        <h2>Categorias</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <form action="{{ url_for('categorias.agregar_categoria') }}" method="POST">
+                    <label for="nombre">Agregar Categoria:
+                        <input id="nombre_categoria" type="text" name="nombre_categoria">
+                    </label>
+                    <button class="btn btn-primary" id="btn-guardar-categoria" type="submit">Guardar</button>
+                </form>
+            </div>
+            <div class="col-md-8">
+                <div class="tabla-datos">
+                    <table class="table table-bordered table-striped" style="overflow-y: auto;">
+                        <thead>
+                        <tr>
+                            <th>Categoria</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cat in categorias %}
+                            <tr>
+                                <td>{{ cat.nombre }}</td>
+                                <td>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for('categorias.editar_categoria', id_categoria=cat.id_categoria) }}">Editar</a>
+                                    <a class="btn btn-danger"
+                                       href="{{ url_for('categorias.eliminar_categoria', id_categoria=cat.id_categoria) }}">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-        <form action="{{ url_for('categorias.agregar_categoria') }}" method="POST">
-            <label for="nombre">
-                <input id="nombre_categoria" type="text" name="nombre_categoria">
-            </label>
-            <button id="btn-guardar-categoria" type="submit">Guardar</button>
-        </form>
 
-        <table style="height: 300px; overflow-y: auto;">
-            <thead>
-            <tr>
-                <th>Categoria</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for cat in categorias %}
-                <tr>
-                    <td>{{ cat.nombre }}</td>
-                    <td>
-                        <a href="{{ url_for('categorias.editar_categoria', id_categoria=cat.id_categoria) }}">Editar</a>
-                        <a href="{{ url_for('categorias.eliminar_categoria', id_categoria=cat.id_categoria) }}">Eliminar</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
     </section>
 {% endblock %}
 

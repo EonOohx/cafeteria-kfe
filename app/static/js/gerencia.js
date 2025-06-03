@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => {
     const url = document.getElementById("btn-productos-fechas").dataset.url;
 
     document.querySelector("form").addEventListener("submit", async (e) => {
@@ -78,8 +78,8 @@ async function renderizarProductosVendidos() {
                 datasets: [{
                     label: 'Ventas por producto',
                     data: valores,
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgb(196, 158, 96)',
+                    borderColor: 'rgb(220, 199, 170)',
                     borderWidth: 1
                 }]
             },

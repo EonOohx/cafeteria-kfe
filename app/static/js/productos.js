@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const nombreCategoria = document.getElementById("nombre_categoria");
+
     const selectFiltrarProductos = document.getElementById("slt-filtrar-categoria");
 
     if (selectFiltrarProductos) {
@@ -32,15 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    if (nombreCategoria) {
-        nombreCategoria.addEventListener("input", (e) => {
-            const btnGuardarCategoria = document.getElementById("btn-guardar-categoria");
-            console.log(e.currentTarget.value);
-            btnGuardarCategoria.disabled = e.currentTarget.value === "" && /^[\p{L}\s'-]+$/u.test(e.currentTarget.value);
-        });
-    }
 
     validarCamposProducto();
+    validarCamposCategoria();
 });
 
 function renderizarTablaProductos(productos) {
@@ -56,8 +50,8 @@ function renderizarTablaProductos(productos) {
             <td>$${parseFloat(precio).toPrecision(2)}</td>
             <td>${mostrarExistencia(inventariable, cantidad)}<td>
            <td>
-                <a href="/productos/editar_producto/${id_producto}" methods="GET">Editar</a>
-                <a href="/productos/eliminar_producto/${id_producto}" methods="GET">Eliminar</a>
+                <a class="btn btn-primary" href="/productos/editar_producto/${id_producto}" methods="GET">Editar</a>
+                <a class="btn btn-danger" href="/productos/eliminar_producto/${id_producto}" methods="GET">Eliminar</a>
             </td>
         `;
         tbProductos.appendChild(fila);
@@ -86,10 +80,10 @@ function validarCamposProducto() {
 
         const disponibleFld = document.getElementById("disponibleFld");
 
-        verificarOpcionExistencia(inventariableChk, existenciaFld, disponibleFld);
+        verificarOpcionExistencia(inventariableChk);
 
         inventariableChk.addEventListener("change", () => {
-            verificarOpcionExistencia(inventariableChk, disponibleFld, existenciaFld);
+            verificarOpcionExistencia(inventariableChk);
         });
 
         habilitarBotonRegistrarProducto(nombreInput, categoriaSelect, precioInput, inventariableChk, existenciaFld, btnGuardar);
@@ -103,7 +97,7 @@ function validarCamposProducto() {
 }
 
 function habilitarBotonRegistrarProducto(nombreInput, categoriaSelect, precioInput, inventariableChk, existenciaFld, btnGuardar) {
-    const nombreValido = /^[\p{L}\s'-]+$/u.test(nombreInput.value);
+    const nombreValido = /^[\p{L}\s'-]+$/u.test(nombreInput.value.trim());
     const categoriaValida = categoriaSelect.value !== "";
     const precioValido = !isNaN(precioInput.value) && Number(precioInput.value) > 0;
     let existencia = !isNaN(existenciaFld.value) && Number(existenciaFld.value) >= 0;
@@ -115,7 +109,23 @@ function habilitarBotonRegistrarProducto(nombreInput, categoriaSelect, precioInp
     btnGuardar.disabled = !(nombreValido && categoriaValida && precioValido && existencia);
 }
 
-function verificarOpcionExistencia(inventariableChk, disponibleFld, existenciaFld) {
+function validarCamposCategoria() {
+    const btnGuardar = document.getElementById("btn-guardar-categoria");
+    if (btnGuardar) {
+        const nombreInput = document.querySelector('input[name="nombre_categoria"]')
+        habilitarRegistrarCategoria(btnGuardar, nombreInput);
+
+        nombreInput.addEventListener("input", (e) => {
+            habilitarRegistrarCategoria(btnGuardar, e.currentTarget);
+        });
+    }
+}
+
+function habilitarRegistrarCategoria(btnGuardar, inputCategoria) {
+    btnGuardar.disabled = !/^[\p{L}\s'-]+$/u.test(inputCategoria.value.trim());
+}
+
+function verificarOpcionExistencia(inventariableChk) {
     const existenciaLabel = document.getElementById("existenciaLabel");
     const disponibleLabel = document.getElementById("disponibleLabel");
     if (inventariableChk.checked) {
