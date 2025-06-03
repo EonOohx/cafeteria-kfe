@@ -42,9 +42,9 @@ def productos_fechas():
         if fecha_inicio and fecha_final:
             return obtener_productos_fecha(fecha_inicio, fecha_final)
         else:
-            return obtener_productos_fecha_todos()
+            return jsonify({"error": "No se proporcionaron las fechas para la busqueda"}), 400
     except sqlalchemy.exc.ProgrammingError as _:
-        return jsonify({"error": "No se proporcionaron las fechas para la busqueda"}), 400
+        return jsonify({"error": "Ocurrio un error al consultar los registros de productos por fecha"}), 400
 
 
 @gerencia_bp.route("/reportes/ventas", methods=["GET"])
@@ -65,7 +65,7 @@ def registros_ventas_to_dict(resultado):
 def obtener_productos_fecha(inicio, final):
     fecha_inicio = datetime.strptime(inicio, "%Y-%m-%d")
     fecha_fin = datetime.strptime(final, "%Y-%m-%d") + timedelta(days=1)
-    if fecha_inicio > fecha_fin:
+    if fecha_inicio < fecha_fin:
         resultados = (
             db.session.query(
                 DetallesVentas.id_producto,
@@ -81,22 +81,6 @@ def obtener_productos_fecha(inicio, final):
         )
         return jsonify([registros_productos_to_dict(d) for d in resultados]), 200
     return jsonify({"error":"La fecha final debe ser superior a la inicial"}), 400
-
-
-def obtener_productos_fecha_todos():
-    resultados = (
-        db.session.query(
-            DetallesVentas.id_producto,
-            func.SUM(DetallesVentas.cantidad).label("cantidad"),
-            Productos.nombre
-        )
-        .join(Productos, DetallesVentas.id_producto == Productos.id_producto)
-        .join(Ventas, DetallesVentas.id_venta == Ventas.id_venta)
-        .group_by(DetallesVentas.id_producto, Productos.nombre)
-        .order_by(func.SUM(DetallesVentas.cantidad).desc())
-        .all()
-    )
-    return jsonify([registros_productos_to_dict(d) for d in resultados]), 200
 
 
 def registros_productos_to_dict(resultado):

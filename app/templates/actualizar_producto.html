@@ -8,53 +8,55 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Actualizar productos</h2>
-    <form action="{{ url_for('productos.editar_producto', id_producto=producto.id_producto) }}" method="POST">
-        <label class="form-label" for="nombre_producto">
-            Producto:
-            <input class="form-control" type="text" name="nombre_producto" value="{{ producto.nombre }}">
-        </label>
+    <div class="div-update-records">
+        <h2>Actualizar productos</h2>
+        <form action="{{ url_for('productos.editar_producto', id_producto=producto.id_producto) }}" method="POST">
+            <label class="form-label" for="nombre_producto">
+                Producto:
+                <input class="form-control" type="text" name="nombre_producto" value="{{ producto.nombre }}">
+            </label>
 
-        <label class="form-label" for="categoria">
-            Categoria:
-            <select id="tipo-categoria" name="categoria">
-                <option value="">Seleccione una categoría</option>
-                {% for cat in categorias %}
-                    {% if producto.id_categoria == cat.id_categoria %}
-                        <option value="{{ cat.id_categoria }}" selected>{{ cat.nombre }}</option>
-                    {% else %}
-                        <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-        </label>
+            <label class="form-label" for="categoria">
+                Categoria:
+                <select id="tipo-categoria" name="categoria">
+                    <option value="">Seleccione una categoría</option>
+                    {% for cat in categorias %}
+                        {% if producto.id_categoria == cat.id_categoria %}
+                            <option value="{{ cat.id_categoria }}" selected>{{ cat.nombre }}</option>
+                        {% else %}
+                            <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
 
-        <label class="form-label" for="precio">
-            Precio:
-            <input class="form-control" type="number" name="precio" value="{{ producto.precio }}">
-        </label>
+            <label class="form-label" for="precio">
+                Precio:
+                <input class="form-control" type="number" name="precio" value="{{ producto.precio }}">
+            </label>
 
-        <label class="form-check-label" for="inventariable">
-            Inventariable:
-            <input class="form-check-input" id="inventariableChk" type="checkbox" name="inventariable"
-                   {% if producto.inventariable %}checked{% endif %}>
-        </label>
+            <label class="form-check-label" for="inventariable">
+                Inventariable:
+                <input class="form-check-input" id="inventariableChk" type="checkbox" name="inventariable"
+                       {% if producto.inventariable %}checked{% endif %}>
+            </label>
 
-        <label class="form-label" id="existenciaLabel">
-            Existencia:
-            <input class="form-control" id="existenciaFld" type="number" name="existencia" value="{{ producto.existencia }}" min="0"
-                   required>
-        </label>
+            <label class="form-label" id="existenciaLabel">
+                Existencia:
+                <input class="form-control" id="existenciaFld" type="number" name="existencia"
+                       value="{{ producto.existencia }}" min="0"
+                       required>
+            </label>
 
-        <label class="form-label" id="disponibleLabel" style="display:none;">
-            Disponible:
-            <select name="disponible" id="disponibleFld">
-                <option value="1" {% if producto.existencia == 1 %}selected{% endif %}>Disponible</option>
-                <option value="0" {% if producto.existencia == 0 %}selected{% endif %}>No disponible</option>
-            </select>
-        </label>
+            <label class="form-label" id="disponibleLabel" style="display:none;">
+                Disponibilidad:
+                <select name="disponible" id="disponibleFld">
+                    <option value="1" {% if producto.existencia == 1 %}selected{% endif %}>Disponible</option>
+                    <option value="0" {% if producto.existencia == 0 %}selected{% endif %}>No disponible</option>
+                </select>
+            </label>
 
-        <button class="btn btn-primary" id="btn-guardar-producto" type="submit" disabled>Guardar</button>
-    </form>
-    <div id="contenedor-alertas" class="mt-3"></div>
+            <button class="btn btn-primary" id="btn-guardar-producto" type="submit" disabled>Guardar</button>
+        </form>
+    </div>
 {% endblock %}

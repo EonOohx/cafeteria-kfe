@@ -3,15 +3,16 @@
 {% block title %} - Categorias{% endblock %}
 
 {% block content %}
-    <h2>Actualizar productos</h2>
-    <form action="{{ url_for('categorias.editar_categoria', id_categoria=categoria.id_categoria) }}" method="POST">
+    <div class="div-update-records">
+        <h2>Actualizar productos</h2>
+        <form action="{{ url_for('categorias.editar_categoria', id_categoria=categoria.id_categoria) }}" method="POST">
 
-        <label class="form-label" for="nombre">
-            Categoria:
-            <input class="form-control" type="text" name="nombre" value="{{ categoria.nombre }}">
-        </label>
+            <label class="form-label" for="nombre">
+                Categoria:
+                <input class="form-control" type="text" name="nombre" value="{{ categoria.nombre }}">
+            </label>
 
-        <button class="btn btn-primary" type="submit">Guardar</button>
-    </form>
-    <div id="contenedor-alertas" class="mt-3"></div>
+            <button class="btn btn-primary" type="submit">Guardar</button>
+        </form>
+    </div>
 {% endblock %}
