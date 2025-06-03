@@ -4,6 +4,7 @@ import sqlalchemy.exc
 from flask import Blueprint, render_template, request, jsonify
 from sqlalchemy.orm import joinedload
 
+from app.models.producto import Productos
 from app.models.registro_ventas import DetallesVentas
 from app.models.ventas import Ventas
 
@@ -28,7 +29,7 @@ def ventas_realizadas():
 def ventas_detalles():
     id_venta = request.args.get('id')
     if id_venta:
-        detalles = DetallesVentas.query.filter_by(id_venta=id_venta).options(
-            joinedload(DetallesVentas.producto)).all()
+        detalles = DetallesVentas.query.filter_by(id_venta=id_venta).join(Productos,
+                                                                          DetallesVentas.id_producto == Productos.id_producto).all()
         return jsonify([d.to_dict() for d in detalles]), 200
     return jsonify({'error': "No se especificó la venta"}), 400
