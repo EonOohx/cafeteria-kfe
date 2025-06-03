@@ -6,47 +6,61 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Productos más vendidos</h3>
-    <form>
-        <label>De: <input name="fecha_inicio" type="date"></label>
-        <label>Hasta: <input name="fecha_final" type="date"></label>
-        <button id="btn-productos-fechas" type="submit" data-url="{{ url_for('gerencia.productos_fechas') }}">Buscar
-        </button>
-    </form>
+    <div class="row mb-3 mt-3">
 
-    <table style="height: 300px; overflow-y: auto;">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Producto</th>
-            <th>Cantidad</th>
-        </tr>
-        </thead>
-        <tbody id="tb-productos-fecha">
-        <!-- Productos en rango de fechas -->
-        </tbody>
-    </table>
+        <div class="col-md-6" style="height: 500px">
+            <h3>Productos más vendidos</h3>
+            <form class="mb-3">
+                <label class="form-label">De: <input class="form-control" name="fecha_inicio" type="date"></label>
+                <label class="form-label">Hasta: <input class="form-control" name="fecha_final" type="date"></label>
+                <button class="btn btn-primary"
+                        id="btn-productos-fechas"
+                        type="submit" data-url="{{ url_for('gerencia.productos_fechas') }}"
+                >Buscar
+                </button>
+            </form>
+            <div class="tabla-datos">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tb-productos-fecha">
+                    <!-- Productos en rango de fechas -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <hr>
-
-    <h3>Ventas por Producto</h3>
-    <div id="div-productos-venta" style="width: 800px;" data-url="{{ url_for('gerencia.productos_ventas') }}">
-        <canvas id="canva-productos-venta"></canvas>
+        <div class="col-md-6">
+            <h3>Ventas por Producto</h3>
+            <div id="div-productos-venta" data-url="{{ url_for('gerencia.productos_ventas') }}">
+                <canvas id="canva-productos-venta"></canvas>
+            </div>
+        </div>
     </div>
 
     <hr>
+    <section id="section-productos-populares" style="height: 450px">
+        <div class="row">
+        <h3>Productos populares</h3>
+        <table class="table table-bordered table-striped" style="overflow-y: auto;">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+            </tr>
+            </thead>
+            <tbody id="tb-productos-populares" data-url="{{ url_for('gerencia.productos_populares') }}">
+            <!-- Productos Populares -->
+            </tbody>
+        </table>
+    </div>
+    </section>
 
-    <h3>Productos populares</h3>
-    <table style="height: 300px; overflow-y: auto;">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Producto</th>
-            <th>Cantidad</th>
-        </tr>
-        </thead>
-        <tbody id="tb-productos-populares" data-url="{{ url_for('gerencia.productos_populares') }}">
-        <!-- Productos Populares -->
-        </tbody>
-    </table>
+
 {% endblock %}

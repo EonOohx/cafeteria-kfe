@@ -1,73 +1,96 @@
 {% extends "base.html" %}
 
-{% block title %}Ventas{% endblock %}
+{% block title %} - Ventas{% endblock %}
 
 {% block script %}
     <script src="{{ url_for('static', filename='js/ventas.js') }}" defer></script>
 {% endblock %}
 
 {% block content %}
-    <h2>Registro de Venta</h2>
-    <button id="btn-ver-ventas" data-url="{{ url_for('ventas_realizadas.ventas_realizadas') }}">Ver ventas</button>
-
-    <hr>
-
-    <section id="seccion-registro-venta">
-        <label for="inp-cliente">Nombre del cliente: <input id="inp-cliente" type="text"></label>
-        <label for="inp-empleado">Nombre del empleado: <input id="inp-empleado" type="text"></label>
-
-        <h3 id="productos-seleccionados">Productos seleccionados</h3>
-        <table id="tabla-productos">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Cantidad</th>
-                <th>Precio unitario</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody id="venta-carrito">
-            <!-- Filas de productos -->
-            </tbody>
-            <tfoot>
-            <tr>
-                <td id="total-venta" colspan="4">Total venta: <span>$0.00</span></td>
-            </tr>
-            </tfoot>
-        </table>
-
-        <button id="btn-finalizar-venta" type="button" disabled>Finalizar venta</button>
-    </section>
-
-    <hr>
-
-    <section id="seccion-agregar-productos">
-        <h2 id="lista-productos">Lista de productos</h2>
-
-        <div class="filtro-categoria">
-            <label for="categoria-select">Categoría:</label>
-            <select id="categoria-select" name="categoria" required>
-                <option value="" disabled selected>Selecciona una categoría</option>
-                {% for cat in categorias %}
-                    <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
-                {% endfor %}
-            </select>
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+        <div><h2>Registro de Venta</h2></div>
+        <div>
+            <button class="btn btn-secondary"
+                    id="btn-ver-ventas"
+                    data-url="{{ url_for('ventas_realizadas.ventas_realizadas') }}"
+            >Ver ventas
+            </button>
         </div>
+    </div>
 
-        <table id="tabla-lista-productos">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Cantidad</th>
-                <th>Precio unitario</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody id="productos-lista">
-            <!-- Productos disponibles -->
-            </tbody>
-        </table>
-    </section>
+    <hr>
+    <div class="row">
+        <div id="div-seleccionar-productos" class="col-md-6">
+            <section id="seccion-seleccionar-productos" style="height: 600px">
+                <h2 class="mt-3 mb-3" id="lista-productos">Lista de productos</h2>
+
+                <div class="mt-3 mb-3">
+                    <label for="categoria-select">Categoría:
+                        <select id="categoria-select" name="categoria" required>
+                            <option value="" disabled selected>Selecciona una categoría</option>
+                            {% for cat in categorias %}
+                                <option value="{{ cat.id_categoria }}">{{ cat.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+
+                <table class="table table-bordered table-striped" id="tabla-lista-productos">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="productos-lista">
+                    <!-- Productos disponibles -->
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        <div id="div-registrar-venta" class="col-md-6">
+            <section class="d-flex flex-column justify-content-between" id="seccion-registro-venta"
+                     style="height: 600px">
+                <div>
+                    <label class="form-label" for="inp-cliente">Nombre del cliente: <input class="form-control"
+                                                                                           id="inp-cliente" type="text"></label>
+                    <label class="form-label" for="inp-empleado">Nombre del empleado: <input class="form-control"
+                                                                                             id="inp-empleado"
+                                                                                             type="text"></label>
+
+                    <h3 class="mt-3 mb-3" id="productos-seleccionados">Productos seleccionados</h3>
+                    <div class="tabla-datos">
+                        <table class="table table-bordered table-striped" id="tabla-productos">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Precio unitario</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="venta-carrito">
+                            <!-- Filas de productos -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <label id="total-venta">Total venta: $0.00</label>
+                    <div id="contenedor-alertas" class="mt-3"></div>
+                </div>
+
+                <div>
+                    <button
+                            class="btn btn-primary"
+                            id="btn-finalizar-venta"
+                            type="button" disabled
+                    >Finalizar venta
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
 {% endblock %}

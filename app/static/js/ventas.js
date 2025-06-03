@@ -64,10 +64,10 @@ function renderizarProductos(productos) {
 
         const fila = document.createElement("tr");
         fila.innerHTML = `
-            <td>${id_producto}</td>
+            <td >${id_producto}</td>
             <td>${nombre}</td>
             <td>${stock}</td>
-            <td>${precio}</td>
+            <td style="width: 100px">${precio}</td>
             ${(cantidad > 0 || !inventariable) ? botonAgregarHTML(producto) : ""}
         `;
         tabla.appendChild(fila);
@@ -84,7 +84,7 @@ function botonAgregarHTML({id_producto, nombre, cantidad, precio, inventariable}
     return `
         <td>
             <button
-                class="btn-agregar"
+                class="btn-agregar btn btn-primary"
                 data-id="${id_producto}"
                 data-nombre="${nombre}"
                 data-cantidad="${cantidad}"
@@ -117,7 +117,7 @@ function agregarAlCarrito(producto) {
     const carrito = document.querySelector("#venta-carrito");
 
     if (carrito.querySelector(`tr[data-id='${id}']`)) {
-        alert("Este resultado ya fue agregado.");
+        alert("Este producto ya fue agregado.");
         return;
     }
 
@@ -128,9 +128,9 @@ function agregarAlCarrito(producto) {
         <td>${id}</td>
         <td data-nombre="${nombre}">${nombre}</td>
         <td>
-            <input data-cantidad="${cantidad}" type="number" min="1" value="1" ${inventariable ? `max="${cantidad}"` : ""}>
+            <input class="form-control" style="width: 100px" data-cantidad="${cantidad}" type="number" min="1" value="1" ${inventariable ? `max="${cantidad}"` : ""}>
         </td>
-        <td data-precio="${precio}">${precio}</td>
+        <td data-precio="${precio}" style="width: 100px">${precio} </td>
     `;
 
     botonEliminarHTML(fila);
@@ -144,6 +144,7 @@ function botonEliminarHTML(fila) {
     const botonEliminar = document.createElement('button');
     botonEliminar.textContent = "Eliminar";
     botonEliminar.classList.add('eliminar');
+    botonEliminar.className = 'btn btn-danger';
     botonEliminar.addEventListener('click', () => {
         fila.remove();
         obtenerTotal();
@@ -193,12 +194,12 @@ async function guardarVenta() {
             body: JSON.stringify(venta)
         }).then(response => {
             if (!response.ok) {
-                alert("No se pudo registrar la venta");
+                mostrarAlerta("Error al guardar la venta", "danger");
                 throw new Error("Error en la solicitud - Registro de Venta");
             }
             return response.json();
         }).then(data => {
-                alert("Registro de venta guardado correctamente");
+                mostrarAlerta("Venta registrada con éxito", "success");
                 guardarDetallesVenta(data.id_venta)
             }
         ).catch(error => {
@@ -224,6 +225,7 @@ async function guardarDetallesVenta(id_venta) {
             body: JSON.stringify(informacion_venta)
         }).then(response => {
             if (!response.ok) {
+                mostrarAlerta("Error al guardar los detalles de la venta", "danger");
                 throw new Error("Error en la solicitud - Detalles de venta");
             }
             return response.json();
@@ -240,4 +242,18 @@ async function guardarDetallesVenta(id_venta) {
         fila.remove();
         obtenerTotal();
     })
+}
+
+function mostrarAlerta(mensaje, tipo = 'success') {
+    const contenedor = document.getElementById("contenedor-alertas"); // un div vacío en tu HTML
+    contenedor.innerHTML = `
+        <div class="alert alert-${tipo}" role="alert">
+            ${mensaje}
+        </div>
+    `;
+
+    // Auto eliminar luego de 3 segundos
+    setTimeout(() => {
+        contenedor.innerHTML = '';
+    }, 3000);
 }
