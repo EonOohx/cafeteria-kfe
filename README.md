@@ -1,4 +1,4 @@
-# 🌐 Proyecto Cafetería KFE
+# 🌐 Proyecto - Sistema para Cafetería KFE
 
 Aplicación web desarrollada con Flask que utiliza SQLAlchemy para gestionar la base de datos MySQL. El proyecto integra el Frontend con plantillas HTML con Jinja2, estilos con Bootstrap y funcionalidades con JavaScript.
 
