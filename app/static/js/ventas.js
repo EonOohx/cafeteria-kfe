@@ -67,7 +67,7 @@ function renderizarProductos(productos) {
             <td >${id_producto}</td>
             <td>${nombre}</td>
             <td>${stock}</td>
-            <td style="width: 100px">${precio}</td>
+            <td style="width: 100px">$${parseFloat(precio).toFixed(2)}</td>
             ${(cantidad > 0 || !inventariable) ? botonAgregarHTML(producto) : ""}
         `;
         tabla.appendChild(fila);
@@ -117,7 +117,7 @@ function agregarAlCarrito(producto) {
     const carrito = document.querySelector("#venta-carrito");
 
     if (carrito.querySelector(`tr[data-id='${id}']`)) {
-        alert("Este producto ya fue agregado.");
+        mostrarAlerta("Este producto ya fue agregado", "warning");
         return;
     }
 
@@ -130,7 +130,7 @@ function agregarAlCarrito(producto) {
         <td>
             <input class="form-control" style="width: 100px" data-cantidad="${cantidad}" type="number" min="1" value="1" ${inventariable ? `max="${cantidad}"` : ""}>
         </td>
-        <td data-precio="${precio}" style="width: 100px">${precio} </td>
+        <td data-precio="${precio}" style="width: 100px">$${parseFloat(precio).toFixed(2)} </td>
     `;
 
     botonEliminarHTML(fila);
@@ -205,7 +205,9 @@ async function guardarVenta() {
         ).catch(error => {
             console.error("Error", error)
         });
-    } else alert("El nombre solo puede contener letras")
+    } else {
+        mostrarAlerta("Verifique el nombre del cliente", "warning");
+    }
 }
 
 async function guardarDetallesVenta(id_venta) {
