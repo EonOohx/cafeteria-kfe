@@ -14,29 +14,29 @@ El proyecto está construido en **Flask (Python)**, con integración de **SQLAlc
   - 3 productos mas vendidos.
   - Gráfica de ventas por producto.
  
-<div>
+<div align="center">
   <div>
     <h3>Pantalla de Inicio - Ventas</h3>
     <a href="./assets/registro_ventas.png" target="_blank">
-      <img src="./assets/registro_ventas.png" alt="Pantalla de inicio" width="500"/>
+      <img src="./assets/registro_ventas.png" alt="Pantalla de inicio" width="250"/>
     </a>
     <a href="./assets/historial_ventas.png" target="_blank">
-      <img src="./assets/historial_ventas.png" alt="Pantalla de inicio" width="500"/>
+      <img src="./assets/historial_ventas.png" alt="Pantalla de inicio" width="250"/>
     </a>
   </div>
     <div>
     <h3>Administración</h3>
     <a href="./assets/productos.png" target="_blank">
-      <img src="./assets/productos.png" alt="Pantalla de inicio" width="500"/>
+      <img src="./assets/productos.png" alt="Pantalla de inicio" width="250"/>
     </a>
     <a href="./assets/actualizar_productos.png" target="_blank">
-      <img src="./assets/actualizar_productos.png" alt="Pantalla de inicio" width="500"/>
+      <img src="./assets/actualizar_productos.png" alt="Pantalla de inicio" width="250"/>
     </a>
   </div>
     <div>
     <h3>Gerencias</h3>
     <a href="./assets/gerencia.png" target="_blank">
-      <img src="./assets/gerencia.png" alt="Pantalla de inicio" width="500"/>
+      <img src="./assets/gerencia.png" alt="Pantalla de inicio" width="250"/>
     </a>
   </div>
 </div>
