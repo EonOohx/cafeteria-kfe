@@ -17,7 +17,7 @@ El proyecto está construido en **Flask (Python)**, con integración de **SQLAlc
 <div>
   <div>
     <h3>Pantalla de Inicio - Ventas</h3>
-    <a href="./assets/registro_ventas" target="_blank">
+    <a href="./assets/registro_ventas" target="./assets/registro_ventas.png">
       <img src="./assets/registro_ventas.png" alt="Pantalla de inicio" width="500"/>
     </a>
     <a href="./assets/historial_ventas" target="_blank">
